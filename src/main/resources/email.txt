@@ -1,8 +1,14 @@
+Can we make Contact immutable?
+use "replace(old,new)" instead of "edit"
+
+Can we add immutable field "id" as identifier of contact?
+
 Answers from Justin
 
-
-Great questions.  There is no need for a UI and just the basic Java classes is perfectly fine here. Storing the contacts in-memory in Java collections is great, no need for a database or other external persistence system.
-
+Great questions.
+There is no need for a UI and just the basic Java classes is perfectly fine here.
+Storing the contacts in-memory in Java collections is great,
+no need for a database or other external persistence system.
 
 Hi Justin,
 
@@ -13,8 +19,12 @@ Few questions from Oleksandr so far:
 Thanks,
 Alex
 
-
-Attached are two files, Contact.java and ContactsApplication.java.  The first is a definition of a basic Contact that the application will store and the second is the interface that you need to implement to make the Contacts application work. You will notice that the getContact and search methods have ... in their signature, meaning you need to define the signature.
+Attached are two files, Contact.java and ContactsApplication.java.
+The first is a definition of a basic Contact that the application will store
+and the second is the interface that you need to implement to make the
+Contacts application work.
+You will notice that the getContact and search methods have ... in their signature,
+meaning you need to define the signature.
 
 Feel free to ask any questions and have fun.
 
