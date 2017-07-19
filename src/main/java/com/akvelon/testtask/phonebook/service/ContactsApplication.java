@@ -12,7 +12,7 @@ public interface ContactsApplication {
 
     Contact createContact(final Contact contact);
 
-    Contact getContact(String phone);
+    Contact getContact(Long id);
 
     Contact editContact(final Contact contact);
 
