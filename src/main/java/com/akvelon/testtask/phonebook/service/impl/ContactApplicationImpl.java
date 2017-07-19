@@ -39,8 +39,9 @@ public class ContactApplicationImpl implements ContactsApplication {
     }
 
     public Contact createContact(final Contact contact) {
-        if (contact.getId() != null)
+        if (contact.getId() != null) {
             throw new ContactApplicationException("You should add only new contact, without id");
+        }
         Contact newContact = Contact.Builder.from(contact)
                 .withId(idGenerator.get())
                 .build();
@@ -54,8 +55,9 @@ public class ContactApplicationImpl implements ContactsApplication {
     }
 
     public Contact editContact(final Contact contact) {
-        if (contact.getId() == null)
+        if (contact.getId() == null) {
             throw new ContactApplicationException("Contact is absent in storage, add it or edit another one");
+        }
         if (null == storage.replace(contact.getId(), Contact.Builder.from(contact).build())) {
             throw new ContactApplicationException(
                     "You can not edit this contact. It is absent in storage");
