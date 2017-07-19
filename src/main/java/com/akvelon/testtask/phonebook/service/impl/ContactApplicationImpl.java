@@ -5,11 +5,9 @@ import com.akvelon.testtask.phonebook.service.exception.ContactApplicationExcept
 import com.akvelon.testtask.phonebook.service.ContactsApplication;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -20,10 +18,6 @@ import java.util.stream.Collectors;
 public class ContactApplicationImpl implements ContactsApplication {
 
     private final Map<Long, Contact> storage;
-    /*
-    *
-    *
-    * */
     private final Supplier<Long> idGenerator = new Supplier<Long>() {
         private long counter = 0L;
 
@@ -47,26 +41,26 @@ public class ContactApplicationImpl implements ContactsApplication {
     public Contact createContact(final Contact contact) {
         if (contact.getId() != null)
             throw new ContactApplicationException("You should add only new contact, without id");
-        Contact newContact = Contact.Builder.aPrototypeContact(contact)
+        Contact newContact = Contact.Builder.from(contact)
                 .withId(idGenerator.get())
                 .build();
         storage.put(newContact.getId(), newContact);
-        return Contact.Builder.aPrototypeContact(newContact).build();
+        return Contact.Builder.from(newContact).build();
     }
 
     public Contact getContact(Long id) {
         return Optional.ofNullable(storage.get(id))
-                .map(contact -> Contact.Builder.aPrototypeContact(contact).build()).orElse(null);
+                .map(contact -> Contact.Builder.from(contact).build()).orElse(null);
     }
 
     public Contact editContact(final Contact contact) {
         if (contact.getId() == null)
             throw new ContactApplicationException("Contact is absent in storage, add it or edit another one");
-        if (null == storage.replace(contact.getId(), Contact.Builder.aPrototypeContact(contact).build())) {
+        if (null == storage.replace(contact.getId(), Contact.Builder.from(contact).build())) {
             throw new ContactApplicationException(
                     "You can not edit this contact. It is absent in storage");
         }
-        return Contact.Builder.aPrototypeContact(contact).build();
+        return Contact.Builder.from(contact).build();
     }
 
     public void deleteContact(Contact contact) {
@@ -76,30 +70,26 @@ public class ContactApplicationImpl implements ContactsApplication {
 
     public List<Contact> search(String query) {
         String[] qualifiers = query.split(" ");
-        return storage.values().stream().filter(new Predicate<Contact>() {
-            @Override
-            public boolean test(Contact contact) {
-                int cases = 0;
-                for (String spec : qualifiers) {
-                    if (StringUtils.containsIgnoreCase(contact.getFirstName(), spec)) {
-                        cases++;
-                        continue;
-                    }
-                    if (StringUtils.containsIgnoreCase(contact.getLastName(), spec)) {
-                        cases++;
-                        continue;
-                    }
-                    if (StringUtils.containsIgnoreCase(contact.getPhone(), spec)) {
-                        cases++;
-                        continue;
-                    }
-                    if (StringUtils.containsIgnoreCase(contact.getEmail(), spec)) {
-                        cases++;
-                        continue;
-                    }
+        return storage.values().stream().filter(contact -> {
+            int cases = 0;
+            for (String spec : qualifiers) {
+                if (StringUtils.containsIgnoreCase(contact.getFirstName(), spec)) {
+                    cases++;
+                    continue;
                 }
-                return cases == qualifiers.length;
+                if (StringUtils.containsIgnoreCase(contact.getLastName(), spec)) {
+                    cases++;
+                    continue;
+                }
+                if (StringUtils.containsIgnoreCase(contact.getPhone(), spec)) {
+                    cases++;
+                    continue;
+                }
+                if (StringUtils.containsIgnoreCase(contact.getEmail(), spec)) {
+                    cases++;
+                }
             }
+            return cases == qualifiers.length;
         }).collect(Collectors.toList());
     }
 

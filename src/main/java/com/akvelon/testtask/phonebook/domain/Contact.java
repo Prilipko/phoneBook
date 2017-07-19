@@ -81,7 +81,7 @@ public class Contact {
             return new Builder();
         }
 
-        public static Builder aPrototypeContact(Contact contact) {
+        public static Builder from(Contact contact) {
             Builder builder = new Builder(contact.getId());
             builder.withFirstName(contact.getFirstName());
             builder.withLastName(contact.getLastName());
