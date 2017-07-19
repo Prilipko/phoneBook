@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
  */
 public class ContactApplicationImpl implements ContactsApplication {
 
-    private final Map<Long, Contact> storage = new HashMap<>();
+    private final Map<Long, Contact> storage;
     private final Supplier<Long> idGenerator = new Supplier<Long>() {
-        private long counter = 1L;
+        private long counter = 0L;
 
         @Override
         public Long get() {
@@ -35,25 +35,33 @@ public class ContactApplicationImpl implements ContactsApplication {
         }
     };
 
+    public ContactApplicationImpl(Map<Long, Contact> storage) {
+        this.storage = storage;
+    }
+
     public Contact createContact(final Contact contact) {
         if (contact.getId() != null)
             throw new ContactApplicationException("You should add only new contact, without id");
         Contact newContact = Contact.Builder.aPrototypeContact(contact)
                 .withId(idGenerator.get())
                 .build();
-        return Contact.Builder.aPrototypeContact(storage.put(newContact.getId(), contact)).build();
+        storage.put(newContact.getId(), newContact);
+        return Contact.Builder.aPrototypeContact(newContact).build();
     }
 
     public Contact getContact(Long id) {
-        return Contact.Builder.aPrototypeContact(storage.get(id)).build();
+        return Optional.ofNullable(storage.get(id))
+                .map(contact -> Contact.Builder.aPrototypeContact(contact).build()).orElse(null);
     }
 
     public Contact editContact(final Contact contact) {
         if (contact.getId() == null)
             throw new ContactApplicationException("Contact is absent in storage, add it or edit another one");
-        return Optional.ofNullable(storage.replace(contact.getId(), Contact.Builder.aPrototypeContact(contact).build()))
-                .orElseThrow(() -> new ContactApplicationException(
-                        "You can not edit this contact. It is absent in storage"));
+        if (null == storage.replace(contact.getId(), Contact.Builder.aPrototypeContact(contact).build())) {
+            throw new ContactApplicationException(
+                    "You can not edit this contact. It is absent in storage");
+        }
+        return Contact.Builder.aPrototypeContact(contact).build();
     }
 
     public void deleteContact(Contact contact) {
@@ -70,7 +78,19 @@ public class ContactApplicationImpl implements ContactsApplication {
                 for (String spec : qualifiers) {
                     if (StringUtils.containsIgnoreCase(contact.getFirstName(), spec)) {
                         cases++;
-                        break;
+                        continue;
+                    }
+                    if (StringUtils.containsIgnoreCase(contact.getLastName(), spec)) {
+                        cases++;
+                        continue;
+                    }
+                    if (StringUtils.containsIgnoreCase(contact.getPhone(), spec)) {
+                        cases++;
+                        continue;
+                    }
+                    if (StringUtils.containsIgnoreCase(contact.getEmail(), spec)) {
+                        cases++;
+                        continue;
                     }
                 }
                 return cases == qualifiers.length;

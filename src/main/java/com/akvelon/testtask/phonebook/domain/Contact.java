@@ -1,4 +1,5 @@
 package com.akvelon.testtask.phonebook.domain;
+
 import com.akvelon.testtask.phonebook.service.ContactsApplication;
 
 /**
@@ -6,6 +7,10 @@ import com.akvelon.testtask.phonebook.service.ContactsApplication;
  */
 public class Contact {
 
+    /*
+    I consider to add id field
+    It is simplifying editing all fields and makes implementation better IMHO
+    */
     private final Long id;
     private String firstName;
     private String lastName;
