@@ -95,4 +95,8 @@ public class ContactApplicationImpl implements ContactsApplication {
         }).collect(Collectors.toList());
     }
 
+    private boolean checkField(Supplier<String> field, String qualifier) {
+        return StringUtils.containsIgnoreCase(field.get(), qualifier);
+    }
+
 }
