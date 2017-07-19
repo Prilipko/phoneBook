@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /**
  * @author oleksandr.prylypko
  */
-public class ContactsApplicationTest {
+public class ContactsApplicationImplTest {
     private ContactsApplication application;
 
     @Before

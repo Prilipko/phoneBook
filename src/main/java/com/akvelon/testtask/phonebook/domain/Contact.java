@@ -8,8 +8,9 @@ import com.akvelon.testtask.phonebook.service.ContactsApplication;
 public class Contact {
 
     /*
-    I consider to add id field
+    I am considering to add id field
     It is simplifying editing all fields and makes implementation better IMHO
+    Also I have added builder if you not mind
     */
     private final Long id;
     private String firstName;

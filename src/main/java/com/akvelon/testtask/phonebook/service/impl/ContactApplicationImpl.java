@@ -20,6 +20,10 @@ import java.util.stream.Collectors;
 public class ContactApplicationImpl implements ContactsApplication {
 
     private final Map<Long, Contact> storage;
+    /*
+    *
+    *
+    * */
     private final Supplier<Long> idGenerator = new Supplier<Long>() {
         private long counter = 0L;
 
@@ -28,6 +32,7 @@ public class ContactApplicationImpl implements ContactsApplication {
             Long threshold = -1L;
             while (storage.containsKey(++counter)) {
                 if (threshold++ == Long.MAX_VALUE) {
+                    //It might be never gonna happen, but I am noticing it
                     throw new ContactApplicationException("Too many contacts on repository.");
                 }
             }
