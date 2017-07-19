@@ -72,20 +72,20 @@ public class ContactApplicationImpl implements ContactsApplication {
         String[] qualifiers = query.split(" ");
         return storage.values().stream().filter(contact -> {
             int cases = 0;
-            for (String spec : qualifiers) {
-                if (StringUtils.containsIgnoreCase(contact.getFirstName(), spec)) {
+            for (String qualifier : qualifiers) {
+                if (StringUtils.containsIgnoreCase(contact.getFirstName(), qualifier)) {
                     cases++;
                     continue;
                 }
-                if (StringUtils.containsIgnoreCase(contact.getLastName(), spec)) {
+                if (StringUtils.containsIgnoreCase(contact.getLastName(), qualifier)) {
                     cases++;
                     continue;
                 }
-                if (StringUtils.containsIgnoreCase(contact.getPhone(), spec)) {
+                if (StringUtils.containsIgnoreCase(contact.getPhone(), qualifier)) {
                     cases++;
                     continue;
                 }
-                if (StringUtils.containsIgnoreCase(contact.getEmail(), spec)) {
+                if (StringUtils.containsIgnoreCase(contact.getEmail(), qualifier)) {
                     cases++;
                 }
             }
